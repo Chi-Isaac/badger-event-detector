@@ -43,7 +43,7 @@ def load_csv_annotations(csv_path):
     return annotations
 
 # Creates annotations and copies images into new folders
-def prepare_split(split_name, csv_path, images_path, output_path):
+def prepare_split_positives(split_name, csv_path, images_path, output_path):
     annotations = load_csv_annotations(csv_path)
     
     output_imgs_dir = output_path / split_name / "images"
