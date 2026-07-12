@@ -9,17 +9,16 @@ def split_image_paths(images_path, train_ratio, val_ratio, test_ratio):
         if path.is_file() and path.suffix.lower() == ".jpg"
     ]
     
-    shuffled = list(image_paths)
-    random.shuffle(shuffled)
+    random.shuffle(image_paths)
     
-    num_imgs = len(shuffled)
+    num_imgs = len(image_paths)
     train_end = int(num_imgs * train_ratio)
     val_end = train_end + int(num_imgs * val_ratio)
 
     return {
-        "train": shuffled[:train_end],
-        "val": shuffled[train_end:val_end],
-        "test": shuffled[val_end:]
+        "train": image_paths[:train_end],
+        "val": image_paths[train_end:val_end],
+        "test": image_paths[val_end:]
     }
 
 def copy_negative_images(split_paths, output_path):
