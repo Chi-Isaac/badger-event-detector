@@ -1,5 +1,7 @@
 import argparse
+import cv2
 from pathlib import Path
+
 
 VIDEO_EXTENSIONS = {".mp4", ".avi", ".mov"}
 
@@ -29,3 +31,22 @@ def parse_args():
     parser.add_argument("--save", action="save_true")
     
     return parser.parse_args()
+
+def load_metadata(video_path):
+    if not video_path.exists():
+        raise FileNotFoundError(f"inference.py: {video_path} does not exist")
+
+    cap = cv2.VideoCapture(str(video_path))
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    # Following three return floats, so cast to int
+    frame_count = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    cap.release()
+    
+    return {
+        "fps": fps,
+        "frame_count": frame_count,
+        "width": width,
+        "height": height
+    }
