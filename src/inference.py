@@ -50,3 +50,14 @@ def load_metadata(video_path):
         "width": width,
         "height": height
     }
+
+# Prepares output directory for results
+def prepare_output_dir(output_dir):
+    output_dir.mkdir(parents=True, exist_ok=True)
+    paths = {
+        "detections": output_dir / "detections.jsonl",
+        "annotated_dir": output_dir / "annotated",
+        "run_info": output_dir / "run_info.json"
+    }
+    paths["annotated_dir"].mkdir(parents=True, exist_ok=True)
+    return paths
