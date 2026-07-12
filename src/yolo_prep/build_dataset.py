@@ -28,6 +28,7 @@ def write_yaml(output_path):
         "path": str(OUTPUT_PATH.resolve()),
         "train": "train/images",
         "val": "val/images",
+        "test": "test/images",
         "names": {
             0: "badger"
         }
