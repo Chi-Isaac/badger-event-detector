@@ -76,3 +76,20 @@ def detections_to_tracks(frame_detections, curr_tracks, iou_threshold):
     unmatched_tracks_ids = [idx for idx in range(len(curr_tracks)) if idx not in matched_tracks]
     
     return matches, unmatched_detections_ids, unmatched_tracks_ids
+
+def update_tracks(frame_detections, curr_tracks, matches, unmatched_detections_ids, unmatched_tracks_ids, min_hits, max_misses):
+    # Update existing tracks with matched detections
+    for detection_id, track_id in matches:
+        detection = frame_detections[detection_id]
+        track = curr_tracks[track_id]
+        
+        track.last_xyxy = detection["box_xyxy"]
+        track.last_xywh = detection["box_xywh"]
+        track.hits += 1
+        track.misses = 0
+        
+        if track.hits >= min_hits:
+            track.state = "active"
+        else:
+            track.state = "tentative"
+        
