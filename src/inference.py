@@ -117,11 +117,11 @@ def run_inference():
                 
                 f.write(json.dumps(record.__dict__) + "\n")
                 
-                # Saves annotated frame with bounding box if --save flag set
-                if args.save:
-                    annotated = result.plot()
-                    output_path = paths["annotated_dir"] / f"{video_id}_frame_{frame_index:06d}.jpg"
-                    cv2.imwrite(str(output_path), annotated)
+            # Saves annotated frame with bounding box if --save flag set
+            if args.save:
+                annotated = result.plot()
+                output_path = paths["annotated_dir"] / f"{video_id}_frame_{frame_index:06d}.jpg"
+                cv2.imwrite(str(output_path), annotated)
     
     run_info = {
         "video_id": video_id,
