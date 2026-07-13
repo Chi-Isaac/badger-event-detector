@@ -17,6 +17,8 @@ def load_detections(path):
     with open(path, "r", encoding="utf-8") as f:
         for line in f:
             record = json.loads(line)
+            if record["frame_index"] >= len(detections_by_frame):
+                detections_by_frame.extend([[] for _ in range(record["frame_index"] - len(detections_by_frame) + 1)])
             detections_by_frame[record["frame_index"]].append(record)
     
     return detections_by_frame
