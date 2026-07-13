@@ -1,4 +1,6 @@
 import json
+import argparse
+from pathlib import Path
 
 class Track:
     track_id: str
@@ -66,7 +68,7 @@ def detections_to_tracks(frame_detections, curr_tracks, iou_threshold):
     matches = []
     
     # Make matches if both detection and track are available (highest IoU first)
-    for detection_id, track_id, iou_score in potential matches:
+    for detection_id, track_id, iou_score in potential_matches:
         if detection_id not in matched_detections and track_id not in matched_tracks:
             matched_detections.add(detection_id)
             matched_tracks.add(track_id)
@@ -119,3 +121,31 @@ def write_tracks_jsonl(tracks, path):
     with open(path, "w", encoding="utf-8") as f:
         for track in tracks:
             f.write(json.dumps(track.__dict__) + "\n")
+            
+def parse_args():
+    parser = argparse.ArgumentParser(description="Object Tracking: Frame detections -> Tracks")
+    parser.add_argument("--detections", type=Path, required = True, help="Path to the detections JSONL file")
+    parser.add_argument("--output", type=Path, required=True, help="Path to the output tracks JSONL file")
+    
+    parser.add_argument("--iou", type=float, default=0.3)
+    parser.add_argument("--min_hits", type=int, default=3) # Tentative -> Active track threshold
+    parser.add_argument("--max_misses", type=int, default=5) # Active -> Lost track threshold
+    return parser.parse_args()
+
+def run_tracking(detections_path, output_path, iou_threhold=0.3, min_hits=3, max_misses=5):
+    detections_by_frame = load_detections(detections_path)
+    curr_tracks = []
+    next_track_id = 0
+    
+    for frame_index, frame_detections in enumerate(detections_by_frame):
+        matches, unmatched_detections_ids, unmatched_tracks_ids = detections_to_tracks(frame_detections, curr_tracks, iou_threhold)
+        curr_tracks, next_track_id = update_tracks(frame_detections, curr_tracks, matches, unmatched_detections_ids, unmatched_tracks_ids, min_hits, max_misses, next_track_id)
+    
+    write_tracks_jsonl(curr_tracks, output_path)
+    
+def main():
+    args = parse_args()
+    run_tracking(args.detections, args.output, args.iou, args.min_hits, args.max_misses)
+    
+if __name__ == "__main__":
+    main()
