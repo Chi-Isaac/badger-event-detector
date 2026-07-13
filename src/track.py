@@ -104,4 +104,12 @@ def update_tracks(frame_detections, curr_tracks, matches, unmatched_detections_i
         track.misses = 0
         track.state = "tentative"
         curr_tracks.append(track)
-        
+    
+    # Update unmatched tracks
+    for track_id in unmatched_tracks_ids:
+        track = curr_tracks[track_id]
+        track.misses += 1
+        if track.misses > max_misses:
+            track.state = "lost"
+            
+    return curr_tracks
