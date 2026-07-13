@@ -18,3 +18,31 @@ def load_detections(path):
             detections_by_frame[record["frame_index"]].append(record)
     
     return detections_by_frame
+
+def iou(box_a, box_b):
+    x1_a, y1_a, x2_a, y2_a = box_a
+    x1_b, y1_b, x2_b, y2_b = box_b
+    
+    # Calculate coords of intersecting box
+    x1_i = max(x1_a, x1_b)
+    y1_i = max(y1_a, y1_b)
+    x2_i = min(x2_a, x2_b)
+    y2_i = min(y2_a, y2_b)
+    
+    # Calculate area of intersection
+    w_i = max(0, x2_i - x1_i)
+    h_i = max(0, y2_i - y1_i)
+    area_i = w_i * h_i
+    
+    # Calculate area of both boxes
+    area_a = (x2_a - x1_a) * (y2_a - y1_a)
+    area_b = (x2_b - x1_b) * (y2_b - y1_b)
+    
+    # Calculate IoU
+    iou = area_i / (area_a + area_b - area_i)
+    
+    # Ensure IoU is between 0 and 1
+    if (0 <= iou <= 1):
+        return iou
+    else:
+        return 0.0
