@@ -46,3 +46,33 @@ def iou(box_a, box_b):
         return iou
     else:
         return 0.0
+
+# Matches detections to existing tracks
+def detections_to_tracks(frame_detections, curr_tracks, iou_threhold):
+    potential_matches = []
+    
+    for detection_id, detection in enumerate(frame_detections):
+        for track_id, track in enumerate(curr_tracks):
+            # If IoU between detection and track is above threshold add as candidate
+            iou_score = iou(detection["box_xyxy"], track.last_xyxy)
+            if iou_score >= iou_threshold:
+                potential_matches.append((detection_id, track_id, iou_score))
+    
+    # Sort by largest IoU score
+    potential_matches.sort(reverse=True)
+    
+    matched_detections = set()
+    matched_tracks = set()
+    matches = []
+    
+    # Make matches if both detection and track are available (highest IoU first)
+    for detection_id, track_id, iou_score in potential matches:
+        if detection_id not in matched_detections and track_id not in matched_tracks:
+            matched_detections.add(detection_id)
+            matched_tracks.add(track_id)
+            matches.append((detection_id, track_id))
+            
+    unmatched_detections_ids = [idx for idx in range(len(frame_detections)) if idx not in matched_detections]
+    unmatched_tracks_ids = [idx for idx in range(len(curr_tracks)) if idx not in matched_tracks]
+    
+    return matches, unmatched_detections_ids, unmatched_tracks_ids
