@@ -77,7 +77,7 @@ def detections_to_tracks(frame_detections, curr_tracks, iou_threshold):
     
     return matches, unmatched_detections_ids, unmatched_tracks_ids
 
-def update_tracks(frame_detections, curr_tracks, matches, unmatched_detections_ids, unmatched_tracks_ids, min_hits, max_misses):
+def update_tracks(frame_detections, curr_tracks, matches, unmatched_detections_ids, unmatched_tracks_ids, min_hits, max_misses, next_track_id):
     # Update existing tracks with matched detections
     for detection_id, track_id in matches:
         detection = frame_detections[detection_id]
@@ -97,7 +97,8 @@ def update_tracks(frame_detections, curr_tracks, matches, unmatched_detections_i
     for detection_id in unmatched_detections_ids:
         detection = frame_detections[detection_id]
         track = Track()
-        track.track_id = f"track_{len(curr_tracks)}"
+        track.track_id = f"track_{next_track_id}"
+        next_track_id += 1
         track.last_xyxy = detection["box_xyxy"]
         track.last_xywh = detection["box_xywh"]
         track.hits = 1
@@ -112,4 +113,4 @@ def update_tracks(frame_detections, curr_tracks, matches, unmatched_detections_i
         if track.misses > max_misses:
             track.state = "lost"
             
-    return curr_tracks
+    return curr_tracks, next_track_id
