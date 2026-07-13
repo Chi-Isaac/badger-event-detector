@@ -48,7 +48,7 @@ def iou(box_a, box_b):
         return 0.0
 
 # Matches detections to existing tracks
-def detections_to_tracks(frame_detections, curr_tracks, iou_threhold):
+def detections_to_tracks(frame_detections, curr_tracks, iou_threshold):
     potential_matches = []
     
     for detection_id, detection in enumerate(frame_detections):
