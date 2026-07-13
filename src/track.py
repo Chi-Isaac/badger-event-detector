@@ -12,7 +12,7 @@ class Track:
 def load_detections(path):
     detections_by_frame = []
     
-    with open(path, "r") as f:
+    with open(path, "r", encoding="utf-8") as f:
         for line in f:
             record = json.loads(line)
             detections_by_frame[record["frame_index"]].append(record)
@@ -114,3 +114,8 @@ def update_tracks(frame_detections, curr_tracks, matches, unmatched_detections_i
             track.state = "lost"
             
     return curr_tracks, next_track_id
+
+def write_tracks_jsonl(tracks, path):
+    with open(path, "w", encoding="utf-8") as f:
+        for track in tracks:
+            f.write(json.dumps(track.__dict__) + "\n")
