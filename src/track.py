@@ -98,7 +98,23 @@ def detections_to_tracks(frame_detections, curr_tracks, iou_threshold):
     
     return matches, unmatched_detections_ids, unmatched_tracks_ids
 
+def new_track_record(detection, track):
+    return TrackRecord(
+        video_id=detection["video_id"],
+        frame_index=detection["frame_index"],
+        timestamp=detection["timestamp"],
+        track_id=track.track_id,
+        hits=track.hits,
+        misses=track.misses,
+        state=track.state,
+        confidence=detection["confidence"],
+        box_xywh=detection["box_xywh"],
+        box_xyxy=detection["box_xyxy"]
+    )
+
 def update_tracks(frame_detections, curr_tracks, matches, unmatched_detections_ids, unmatched_tracks_ids, min_hits, max_misses, next_track_id):
+    new_records = []
+    
     # Update existing tracks with matched detections
     for detection_id, track_id in matches:
         detection = frame_detections[detection_id]
@@ -113,6 +129,7 @@ def update_tracks(frame_detections, curr_tracks, matches, unmatched_detections_i
             track.state = "active"
         else:
             track.state = "tentative"
+        new_records.append(new_track_record(detection, track))
         
     # Create new tracks for unmatched detections
     for detection_id in unmatched_detections_ids:
@@ -126,6 +143,7 @@ def update_tracks(frame_detections, curr_tracks, matches, unmatched_detections_i
         track.misses = 0
         track.state = "tentative"
         curr_tracks.append(track)
+        new_records.append(new_track_record(detection, track))
     
     # Update unmatched tracks
     for track_id in unmatched_tracks_ids:
