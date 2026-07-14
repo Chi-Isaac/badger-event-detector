@@ -151,7 +151,10 @@ def update_tracks(frame_detections, curr_tracks, matches, unmatched_detections_i
         track.misses += 1
         if track.misses > max_misses:
             track.state = "lost"
-            
+    
+    # Remove lost tracks
+    curr_tracks = [track for track in curr_tracks if track.state != "lost"]
+    
     return curr_tracks, next_track_id, new_records
 
 def write_tracks_jsonl(track_records, path):
