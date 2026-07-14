@@ -61,10 +61,11 @@ def detections_to_tracks(frame_detections, curr_tracks, iou_threshold):
     
     for detection_id, detection in enumerate(frame_detections):
         for track_id, track in enumerate(curr_tracks):
-            # If IoU between detection and track is above threshold add as candidate
-            iou_score = iou(detection["box_xyxy"], track.last_xyxy)
-            if iou_score >= iou_threshold:
-                potential_matches.append((detection_id, track_id, iou_score))
+            if track.state != "lost":
+                # If IoU between detection and track is above threshold add as candidate
+                iou_score = iou(detection["box_xyxy"], track.last_xyxy)
+                if iou_score >= iou_threshold:
+                    potential_matches.append((detection_id, track_id, iou_score))
     
     # Sort by largest IoU score
     potential_matches.sort(reverse=True)
