@@ -39,17 +39,21 @@ def iou(box_a, box_b):
     area_i = w_i * h_i
     
     # Calculate area of both boxes
-    area_a = (x2_a - x1_a) * (y2_a - y1_a)
-    area_b = (x2_b - x1_b) * (y2_b - y1_b)
+    area_a = max(0, x2_a - x1_a) * max(0, y2_a - y1_a)
+    area_b = max(0, x2_b - x1_b) * max(0, y2_b - y1_b)
+    
+    # Calculate union area and check if 0
+    union = area_a + area_b - area_i
+    if union <= 0:
+        return 0.0
     
     # Calculate IoU
-    iou = area_i / (area_a + area_b - area_i)
+    iou = area_i / union
     
     # Ensure IoU is between 0 and 1
     if (0 <= iou <= 1):
         return iou
-    else:
-        return 0.0
+    return 0.0
 
 # Matches detections to existing tracks
 def detections_to_tracks(frame_detections, curr_tracks, iou_threshold):
@@ -117,7 +121,7 @@ def update_tracks(frame_detections, curr_tracks, matches, unmatched_detections_i
         if track.misses > max_misses:
             track.state = "lost"
             
-    return curr_tracks, next_track_id
+    return curr_tracks, next_track_id, new_records
 
 def write_tracks_jsonl(tracks, path):
     with open(path, "w", encoding="utf-8") as f:
