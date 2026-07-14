@@ -154,10 +154,11 @@ def update_tracks(frame_detections, curr_tracks, matches, unmatched_detections_i
             
     return curr_tracks, next_track_id, new_records
 
-def write_tracks_jsonl(tracks, path):
+def write_tracks_jsonl(track_records, path):
+    path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
-        for track in tracks:
-            f.write(json.dumps(track.__dict__) + "\n")
+        for record in track_records:
+            f.write(json.dumps(record.__dict__) + "\n")
             
 def parse_args():
     parser = argparse.ArgumentParser(description="Object Tracking: Frame detections -> Tracks")
@@ -173,12 +174,14 @@ def run_tracking(detections_path, output_path, iou_threhold=0.3, min_hits=3, max
     detections_by_frame = load_detections(detections_path)
     curr_tracks = []
     next_track_id = 0
+    track_records = []
     
     for frame_index, frame_detections in enumerate(detections_by_frame):
         matches, unmatched_detections_ids, unmatched_tracks_ids = detections_to_tracks(frame_detections, curr_tracks, iou_threhold)
-        curr_tracks, next_track_id = update_tracks(frame_detections, curr_tracks, matches, unmatched_detections_ids, unmatched_tracks_ids, min_hits, max_misses, next_track_id)
+        curr_tracks, next_track_id, new_records = update_tracks(frame_detections, curr_tracks, matches, unmatched_detections_ids, unmatched_tracks_ids, min_hits, max_misses, next_track_id)
+        track_records.extend(new_records)
     
-    write_tracks_jsonl(curr_tracks, output_path)
+    write_tracks_jsonl(track_records, output_path)
     
 def main():
     args = parse_args()
