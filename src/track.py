@@ -99,18 +99,18 @@ def detections_to_tracks(frame_detections, curr_tracks, iou_threshold):
     return matches, unmatched_detections_ids, unmatched_tracks_ids
 
 def new_track_record(detection, track):
-    return TrackRecord(
-        video_id=detection["video_id"],
-        frame_index=detection["frame_index"],
-        timestamp=detection["timestamp"],
-        track_id=track.track_id,
-        hits=track.hits,
-        misses=track.misses,
-        state=track.state,
-        confidence=detection["confidence"],
-        box_xywh=detection["box_xywh"],
-        box_xyxy=detection["box_xyxy"]
-    )
+    record = TrackRecord()
+    record.video_id = detection["video_id"]
+    record.frame_index = detection["frame_index"]
+    record.timestamp = detection["timestamp"]
+    record.track_id = track.track_id
+    record.hits = track.hits
+    record.misses = track.misses
+    record.state = track.state
+    record.confidence = detection["confidence"]
+    record.box_xywh = detection["box_xywh"]
+    record.box_xyxy = detection["box_xyxy"]
+    return record
 
 def update_tracks(frame_detections, curr_tracks, matches, unmatched_detections_ids, unmatched_tracks_ids, min_hits, max_misses, next_track_id):
     new_records = []
