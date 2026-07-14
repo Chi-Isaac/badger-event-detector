@@ -170,14 +170,14 @@ def parse_args():
     parser.add_argument("--max_misses", type=int, default=5) # Active -> Lost track threshold
     return parser.parse_args()
 
-def run_tracking(detections_path, output_path, iou_threhold=0.3, min_hits=3, max_misses=5):
+def run_tracking(detections_path, output_path, iou_threshold=0.3, min_hits=3, max_misses=5):
     detections_by_frame = load_detections(detections_path)
     curr_tracks = []
     next_track_id = 0
     track_records = []
     
     for frame_index, frame_detections in enumerate(detections_by_frame):
-        matches, unmatched_detections_ids, unmatched_tracks_ids = detections_to_tracks(frame_detections, curr_tracks, iou_threhold)
+        matches, unmatched_detections_ids, unmatched_tracks_ids = detections_to_tracks(frame_detections, curr_tracks, iou_threshold)
         curr_tracks, next_track_id, new_records = update_tracks(frame_detections, curr_tracks, matches, unmatched_detections_ids, unmatched_tracks_ids, min_hits, max_misses, next_track_id)
         track_records.extend(new_records)
     
