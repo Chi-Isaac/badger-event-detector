@@ -9,6 +9,18 @@ class Track:
     hits: int
     misses: int
     state: str
+    
+class TrackRecord:
+    video_id: str
+    frame_index: int
+    timestamp: float
+    track_id: str
+    hits: int
+    misses: int
+    state: str
+    confidence: float
+    box_xywh: list[float]
+    box_xyxy: list[float]
 
 # Takes jsonl with all detections and returns list of detections by frame
 def load_detections(path):
