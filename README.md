@@ -46,3 +46,16 @@ python3 -m pip install -r requirements.txt
 ```
 
 For GPU support, install the appropriate PyTorch build for your system.
+
+---
+
+## Acknowledgments
+This project uses the following datasets:
+- [Badger Dataset for ICANN](https://osf.io/d6vrf/overview), licensed under CC BY 4.0.
+- [Nighttime Driving Images Dataset](https://www.kaggle.com/datasets/adembakrc/nighttime-driving), licensed under the MIT License.
+
+Thanks to the dataset creators and maintainers, and to the developers of:
+- [NumPy](https://numpy.org) for numerical operations.
+- [OpenCV](https://opencv.org) for image and video processing.
+- [PyYAML](https://pyyaml.org) for reading dataset configuration files.
+- [Ultralytics](https://github.com/ultralytics/ultralytics) for YOLO training and inference.
