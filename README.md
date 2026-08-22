@@ -114,6 +114,24 @@ data/
 
 ---
 
+## Training
+Please ensure the dataset is properly prepared before attempting to train the model.
+
+To train the YOLO model from the repository root:
+```bash
+python3 src/train_model.py
+```
+
+Training outputs, including the model weights and metrics will be saved in the `runs/` folder.
+
+The best-performing and last model weights will be stored in:
+```text
+runs/badger_yolo11s/weights/best.pt
+runs/badger_yolo11s/weights/last.pt
+```
+
+---
+
 ## Acknowledgments
 This project uses the following datasets:
 - [Badger Dataset for ICANN](https://osf.io/d6vrf/overview), licensed under CC BY 4.0.
