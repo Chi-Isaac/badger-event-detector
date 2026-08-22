@@ -49,6 +49,71 @@ For GPU support, install the appropriate PyTorch build for your system.
 
 ---
 
+## Dataset Preparation
+
+This project uses two datasets:
+- [Badger Dataset for ICANN](https://osf.io/d6vrf/overview)
+- [Nighttime Driving Images Dataset](https://www.kaggle.com/datasets/adembakrc/nighttime-driving)
+
+The raw data is stored in the data folder:
+
+```text
+data/
+├── Badger_Dataset_for_ICANN/
+└── nighttime-driving/
+```
+
+The scripts in `src/yolo_prep/` are used to prepare the data for YOLO training:
+- `prep_positives.py` prepares positive images (images containing badgers).
+- `prep_negatives.py` prepares negative images (images not including badgers).
+- `build_dataset.py` creates the final YOLO dataset.
+
+The prepared YOLO dataset is written to `data/prepared_yolo/`. It stores the dataset using images as well as YOLO-format `.txt` annotation files for labelled badger images, organised into separate folders for training, validation, and test splits. 
+
+From the repository root, prepare the dataset with:
+```bash
+python3 -m src.yolo_prep.build_dataset
+```
+
+The data folder following the dataset preparation:
+
+```text
+data/
+├── Badger_Dataset_for_ICANN/
+├── nighttime-driving/
+└── prepared_yolo/
+    ├── test/
+    │   ├── images/
+    │   |   ├── ESP_EK000058_image_00001.jpg
+    │   |   ├── ...
+    │   |   └── STRIK_EK000016_image_00062.jpg
+    │   ├── labels/
+    │   |   ├── ESP_EK000058_image_00001.txt
+    │   |   ├── ...
+    │   |   └── STRIK_EK000016_image_00062.txt
+    ├── train/
+    │   ├── images/
+    │   |   ├── ESP_EK000027__image_00003.jpg
+    │   |   ├── ...
+    │   |   └── STRIK_EK000019_image_00062.jpg
+    │   ├── labels/
+    │   |   ├── ESP_EK000027__image_00003.txt
+    │   |   ├── ...
+    │   |   └── STRIK_EK000019_image_00062.txt
+    ├── val/
+    │   ├── images/
+    │   |   ├── ESP_EK000027__image_00001.jpg
+    │   |   ├── ...
+    │   |   └── STRIK_EK000019_image_00058.jpg
+    │   └── labels/
+    │       ├── ESP_EK000027__image_00001.txt
+    │       ├── ...
+    │       └── STRIK_EK000019_image_00058.txt
+    └── dataset.yaml 
+```
+
+---
+
 ## Acknowledgments
 This project uses the following datasets:
 - [Badger Dataset for ICANN](https://osf.io/d6vrf/overview), licensed under CC BY 4.0.
