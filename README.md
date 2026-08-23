@@ -138,7 +138,11 @@ runs/badger_yolo11s/weights/last.pt
 
 To run object detection on an input video from the repository root:
 ```bash
-python3 src/inference.py --model <PATH_TO_MODEL_WEIGHTS> --source <PATH_TO_INPUT_VIDEO> --outdir <OUTPUT_DIRECTORY> [--save]
+python3 src/inference.py \
+    --model <PATH_TO_MODEL_WEIGHTS> \
+    --source <PATH_TO_INPUT_VIDEO> \
+    --outdir <OUTPUT_DIRECTORY> \
+    [--save]
 ```
 
 | Argument | Description | Required | Default Value |
@@ -154,7 +158,12 @@ This step runs the YOLO model over the input footage frame by frame and writes d
 
 To run object tracking using the detections generated during inference from the repository root:
 ```bash
-python3 src/track.py --detections <PATH_TO_DETECTIONS> --output <PATH_TO_TRACKS> [--iou <IOU_THRESHOLD>] [--min_hits <MIN_HITS>] [--max_misses <MAX_MISSES>]
+python3 src/track.py \
+    --detections <PATH_TO_DETECTIONS> \
+    --output <PATH_TO_TRACKS> \
+    [--iou <IOU_THRESHOLD>] \
+    [--min_hits <MIN_HITS>] \
+    [--max_misses <MAX_MISSES>]
 ```
 
 | Argument | Description | Required | Default Value |
@@ -182,6 +191,7 @@ For example:
 ```json
 {"video_id": "EK000058", "frame_index": 0, "timestamp": 0.0, "image_width": 1280, "image_height": 720, "category_name": "badger", "category_id": 0, "confidence": 0.8888955116271973, "box_xywh": [367.72979736328125, 402.4609069824219, 284.1888427734375, 268.35565185546875], "box_xyxy": [225.63539123535156, 268.2830810546875, 509.82421875, 536.6387329101562], "model_name": "best"}
 ```
+
 Detection records include:
 - Video identifier and frame number
 - Timestamp in seconds
