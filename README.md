@@ -132,6 +132,22 @@ runs/badger_yolo11s/weights/last.pt
 
 ---
 
+## Inference and Tracking
+
+To run the detection and tracking pipeline from the repository root:
+```bash
+python3 src/inference.py --model <PATH_TO_MODEL_WEIGHTS> --source <PATH_TO_INPUT_VIDEO> --outdir <OUTPUT_DIRECTORY> --save
+```
+
+| Argument | Description
+| --- | --- |
+| `--model` | Path to trained YOLO model weights.
+| `--source` | Path to the input video file.
+| `--outdir` | Path to directory to store inference outputs.
+| `--save` | Flag to save annotated frames.
+
+---
+
 ## Acknowledgments
 This project uses the following datasets:
 - [Badger Dataset for ICANN](https://osf.io/d6vrf/overview), licensed under CC BY 4.0.
