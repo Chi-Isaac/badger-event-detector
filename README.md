@@ -138,7 +138,7 @@ runs/badger_yolo11s/weights/last.pt
 
 To run object detection on an input video from the repository root:
 ```bash
-python3 src/inference.py --model <PATH_TO_MODEL_WEIGHTS> --source <PATH_TO_INPUT_VIDEO> --outdir <OUTPUT_DIRECTORY> --save
+python3 src/inference.py --model <PATH_TO_MODEL_WEIGHTS> --source <PATH_TO_INPUT_VIDEO> --outdir <OUTPUT_DIRECTORY> [--save]
 ```
 
 | Argument | Description | Required | Default Value |
@@ -154,7 +154,7 @@ This step runs the YOLO model over the input footage frame by frame and writes d
 
 To run object tracking using the detections generated during inference from the repository root:
 ```bash
-python3 src/track.py --detections <PATH_TO_DETECTIONS> --output <PATH_TO_TRACKS> --iou <IOU_THRESHOLD> --min_hits <MIN_HITS> --max_misses <MAX_MISSES>
+python3 src/track.py --detections <PATH_TO_DETECTIONS> --output <PATH_TO_TRACKS> [--iou <IOU_THRESHOLD>] [--min_hits <MIN_HITS>] [--max_misses <MAX_MISSES>]
 ```
 
 | Argument | Description | Required | Default Value |
