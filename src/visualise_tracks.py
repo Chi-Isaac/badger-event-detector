@@ -75,9 +75,21 @@ def visualise(video_path, tracks_path, output_path):
             colour = track_colour(track_id)
             
             cv2.rectangle(frame, (x1, y1), (x2, y2), colour, 2)
-            
-            writer.write(frame)
-            frame_index += 1
+        
+        # Draw frame index on the top left corner of the frame
+        cv2.putText(
+            frame,
+            f"frame: {frame_index}",
+            (20, 30),
+            cv2.FONT_HERSHEY_SIMPLEX,
+            0.8,
+            (0, 255, 255),
+            2,
+            cv2.LINE_AA,
+        )
+        
+        writer.write(frame)
+        frame_index += 1
     
     # Release resources
     cap.release()
