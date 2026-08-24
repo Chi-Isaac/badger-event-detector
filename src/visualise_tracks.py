@@ -1,5 +1,9 @@
 import argparse
 from pathlib import Path
+import cv2
+import json
+import random
+import colorsys
 
 def parse_args():
     parser = argparse.ArgumentParser(description="Visualise tracks on video")
@@ -38,8 +42,50 @@ def load_tracks_by_frame(tracks_path):
 
     return tracks_by_frame
 
+def visualise(video_path, tracks_path, output_path):
+    tracks_by_frame = load_tracks_by_frame(tracks_path)
+    
+    cap = cv2.VideoCapture(str(video_path))
+    
+    # Get video properties
+    fps = cap.get(cv2.CAP_PROP_FPS)
+    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    
+    # Prepare output
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    writer = cv2.VideoWriter(str(output_path), cv2.VideoWriter_fourcc(*"mp4v"), fps, (width, height))
+    
+    frame_index = 0
+    
+    while True:
+        ret, frame = cap.read()
+        if not ret:
+            break
+        
+        frame_tracks = tracks_by_frame.get(frame_index, [])
+        
+        # Draw rectangle around each tracked object
+        for record in frame_tracks:
+            x1, y1, x2, y2 = [int(coord) for coord in record["box_xyxy"]]
+            track_id = record["track_id"]
+            state = record.get("state", "unknown")
+            confidence = record.get("confidence", 0.0)
+            
+            colour = track_colour(track_id)
+            
+            cv2.rectangle(frame, (x1, y1), (x2, y2), colour, 2)
+            
+            writer.write(frame)
+            frame_index += 1
+    
+    # Release resources
+    cap.release()
+    writer.release()
+
 def main():
     args = parse_args()
+    visualise(args.input, args.tracks, args.output)
 
 if __name__ == "__main__":
     main()
