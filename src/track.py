@@ -1,7 +1,9 @@
 import json
 import argparse
 from pathlib import Path
+from dataclasses import dataclass, asdict
 
+@dataclass
 class Track:
     track_id: str
     last_xyxy: list[float]
@@ -10,6 +12,7 @@ class Track:
     misses: int
     state: str
     
+@dataclass
 class TrackRecord:
     video_id: str
     frame_index: int
@@ -161,7 +164,7 @@ def write_tracks_jsonl(track_records, path):
     path.parent.mkdir(parents=True, exist_ok=True)
     with open(path, "w", encoding="utf-8") as f:
         for record in track_records:
-            f.write(json.dumps(record.__dict__) + "\n")
+            f.write(json.dumps(asdict(record)) + "\n")
             
 def parse_args():
     parser = argparse.ArgumentParser(description="Object Tracking: Frame detections -> Tracks")

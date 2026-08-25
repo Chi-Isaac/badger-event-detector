@@ -3,9 +3,11 @@ import cv2
 import json
 from pathlib import Path
 from ultralytics import YOLO
+from dataclasses import dataclass, asdict
 
 VIDEO_EXTENSIONS = {".mp4", ".avi", ".mov"}
 
+@dataclass
 class DetectionRecord:
     video_id: str
     frame_index: int
@@ -115,7 +117,7 @@ def run_inference():
                 record.box_xyxy = [float(i) for i in box.xyxy[0].tolist()]
                 record.model_name = model_name
                 
-                f.write(json.dumps(record.__dict__) + "\n")
+                f.write(json.dumps(asdict(record)) + "\n")
                 
             # Saves annotated frame with bounding box if --save flag set
             if args.save:
