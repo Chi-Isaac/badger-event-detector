@@ -237,6 +237,33 @@ The `state` field in each JSON object describes the current stage of a track:
 
 ---
 
+## Visualisation
+
+This step takes a source video and the `tracks.jsonl` file from the tracking stage to write a new video with bounding boxes.
+
+To run from the repository root:
+```bash
+python3 src/visualise_tracks.py \
+    --input <PATH_TO_INPUT_VIDEO> \
+    --tracks <PATH_TO_TRACKS> \
+    --output <PATH_TO_OUTPUT>
+```
+
+| Argument | Description | Required |
+| --- | --- | --- |
+| `--input` | Path to the original source video | Yes |
+| `--tracks` | Path to `tracks.jsonl` file produced by `src/track.py` | Yes |
+| `--output` | Path where the output will be written | Yes |
+
+The output video will:
+- Have the same resolution and FPS as the input video.
+- Show a coloured rectangle around each detection.
+- Have the same colour for each track.
+- Displays a label for each track (track_id, state, confidence).
+- Displays the frame index.
+
+---
+
 ## Acknowledgments
 This project uses the following datasets:
 - [Badger Dataset for ICANN](https://osf.io/d6vrf/overview), licensed under CC BY 4.0.
