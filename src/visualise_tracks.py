@@ -42,6 +42,20 @@ def load_tracks_by_frame(tracks_path):
 
     return tracks_by_frame
 
+def draw_label(frame, text, x, y, colour):
+    font = cv2.FONT_HERSHEY_SIMPLEX
+    font_scale = 0.5
+    thickness = 1
+
+    # Get the size of the text
+    (text_width, text_height), baseline = cv2.getTextSize(text, font, font_scale, thickness)
+
+    top = max(0, y - text_height - baseline)
+    bottom = max(text_height + baseline, y)
+    
+    cv2.rectangle(frame, (x, top), (x + text_width, bottom), colour, -1)
+    cv2.putText(frame, text, (x, bottom), font, font_scale, (255, 255, 255), thickness, cv2.LINE_AA)
+
 def visualise(video_path, tracks_path, output_path):
     tracks_by_frame = load_tracks_by_frame(tracks_path)
     
@@ -75,6 +89,9 @@ def visualise(video_path, tracks_path, output_path):
             colour = track_colour(track_id)
             
             cv2.rectangle(frame, (x1, y1), (x2, y2), colour, 2)
+        
+            label = f"{track_id} | {state} | {confidence:.2f}"
+            draw_label(frame, label, x1, y1, colour)
         
         # Draw frame index on the top left corner of the frame
         cv2.putText(
