@@ -106,7 +106,7 @@ def run_inference():
                 detections += 1
                 record = DetectionRecord()
                 record.video_id = video_id
-                record.frame_index = frame_index
+                record.frame_index = frame_index * args.stride
                 record.timestamp = timestamp
                 record.image_width = image_width
                 record.image_height = image_height
