@@ -29,7 +29,7 @@ def parse_args():
     parser.add_argument("--imgsz", type=int, default=640) # Inference image size (pixels)
     parser.add_argument("--device", type=str, default="0") # Device to run inference on ("cpu" or "0" for GPU)
     parser.add_argument("--stride", type=int, default=1) # Stride for fram sampling
-    parser.add_argument("--save", action="store_true") # Save inference video with bounding boxes drawn
+    parser.add_argument("--save", action="store_true") # Save individual frames with bounding boxes drawn
     
     return parser.parse_args()
 
