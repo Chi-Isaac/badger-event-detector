@@ -81,7 +81,7 @@ def run_inference():
         imgsz=args.imgsz,
         device=args.device,
         vid_stride=args.stride,
-        save=args.save,
+        save=False,
         stream=True,
         verbose=True
     )
