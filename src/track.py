@@ -171,9 +171,9 @@ def parse_args():
     parser.add_argument("--detections", type=Path, required = True, help="Path to the detections JSONL file")
     parser.add_argument("--output", type=Path, required=True, help="Path to the output tracks JSONL file")
     
-    parser.add_argument("--iou", type=float, default=0.3)
-    parser.add_argument("--min_hits", type=int, default=3) # Tentative -> Active track threshold
-    parser.add_argument("--max_misses", type=int, default=5) # Active -> Lost track threshold
+    parser.add_argument("--iou", type=float, default=0.3, help="IoU threshold for matching detections to existing tracks (default is 0.3)")
+    parser.add_argument("--min_hits", type=int, default=3, help="Minimum hits required to consider a track as active (default is 3)")
+    parser.add_argument("--max_misses", type=int, default=5, help="Maximum misses allowed before considering a track as lost (default is 5)")
     return parser.parse_args()
 
 def run_tracking(detections_path, output_path, iou_threshold=0.3, min_hits=3, max_misses=5):
