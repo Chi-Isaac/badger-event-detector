@@ -104,18 +104,19 @@ def run_inference():
             # For each detection, DetectionRecord made for JSONL file
             for box in result.boxes:
                 detections += 1
-                record = DetectionRecord()
-                record.video_id = video_id
-                record.frame_index = frame_index * args.stride
-                record.timestamp = timestamp
-                record.image_width = image_width
-                record.image_height = image_height
-                record.category_name = result.names[int(box.cls)]
-                record.category_id = int(box.cls)
-                record.confidence = float(box.conf)
-                record.box_xywh = [float(i) for i in box.xywh[0].tolist()]
-                record.box_xyxy = [float(i) for i in box.xyxy[0].tolist()]
-                record.model_name = model_name
+                record = DetectionRecord(
+                    video_id=video_id,
+                    frame_index=frame_index * args.stride,
+                    timestamp=timestamp,
+                    image_width=image_width,
+                    image_height=image_height,
+                    category_name=result.names[int(box.cls)],
+                    category_id=int(box.cls),
+                    confidence=float(box.conf),
+                    box_xywh=[float(i) for i in box.xywh[0].tolist()],
+                    box_xyxy=[float(i) for i in box.xyxy[0].tolist()],
+                    model_name=model_name
+                )
                 
                 f.write(json.dumps(asdict(record)) + "\n")
                 
