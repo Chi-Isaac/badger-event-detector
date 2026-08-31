@@ -275,6 +275,8 @@ Thanks to the dataset creators and maintainers, and to the developers of:
 - [PyYAML](https://pyyaml.org) for reading dataset configuration files.
 - [Ultralytics](https://github.com/ultralytics/ultralytics) for YOLO training and inference.
 
+---
+
 ## TODO / Future Improvements
 - [ ] **Improve tracking consistency**: Track fragmentation can occur when badgers are not detected for extended periods due to use of IoU-based matching.
 - [ ] **Optimise inference speed**: Profile and improve FPS for real-time performance.
