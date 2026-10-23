@@ -83,7 +83,7 @@ def detections_to_tracks(frame_detections, curr_tracks, iou_threshold):
                     potential_matches.append((detection_id, track_id, iou_score))
     
     # Sort by largest IoU score
-    potential_matches.sort(reverse=True)
+    potential_matches.sort(key = lambda match : match[2], reverse=True)
     
     matched_detections = set()
     matched_tracks = set()
