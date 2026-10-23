@@ -139,14 +139,15 @@ def update_tracks(frame_detections, curr_tracks, matches, unmatched_detections_i
     # Create new tracks for unmatched detections
     for detection_id in unmatched_detections_ids:
         detection = frame_detections[detection_id]
-        track = Track()
-        track.track_id = f"track_{next_track_id}"
+        track = Track(
+            track_id = f"track_{next_track_id}",
+            last_xyxy = detection["box_xyxy"],
+            last_xywh = detection["box_xywh"],
+            hits = 1,
+            misses = 0,
+            state = "tentative",
+        )
         next_track_id += 1
-        track.last_xyxy = detection["box_xyxy"]
-        track.last_xywh = detection["box_xywh"]
-        track.hits = 1
-        track.misses = 0
-        track.state = "tentative"
         curr_tracks.append(track)
         new_records.append(new_track_record(detection, track))
     
