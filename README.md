@@ -52,7 +52,7 @@ For GPU support, install the appropriate PyTorch build for your system.
 ## Dataset Preparation
 
 This project uses two datasets:
-- [Badger Dataset for ICANN](https://osf.io/d6vrf/overview)
+- [Badger Dataset for ICANN](https://osf.io/2qgup/overview)
 - [Nighttime Driving Images Dataset](https://www.kaggle.com/datasets/adembakrc/nighttime-driving)
 
 The raw data is stored in the data folder:
@@ -266,7 +266,7 @@ The output video will:
 
 ## Acknowledgments
 This project uses the following datasets:
-- [Badger Dataset for ICANN](https://osf.io/d6vrf/overview), licensed under CC BY 4.0.
+- [Badger Dataset for ICANN](https://osf.io/2qgup/overview), licensed under CC BY 4.0.
 - [Nighttime Driving Images Dataset](https://www.kaggle.com/datasets/adembakrc/nighttime-driving), licensed under the MIT License.
 
 Thanks to the dataset creators and maintainers, and to the developers of:
