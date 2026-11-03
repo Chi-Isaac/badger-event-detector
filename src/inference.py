@@ -95,9 +95,10 @@ def run_inference():
     detections = 0
     
     with open(paths["detections"], "w") as f:
-        for frame_index, result in enumerate(results):
+        for sample_index, result in enumerate(results):
             frames_seen += 1
-            timestamp = frame_index / metadata["fps"]
+            frame_index = (sample_index + 1) * args.stride - 1
+            timestamp = frame_index / metadata["fps"] if metadata["fps"] > 0 else 0.0
             image_width = metadata["width"]
             image_height = metadata["height"]
             
@@ -106,7 +107,7 @@ def run_inference():
                 detections += 1
                 record = DetectionRecord(
                     video_id=video_id,
-                    frame_index=frame_index * args.stride,
+                    frame_index=frame_index,
                     timestamp=timestamp,
                     image_width=image_width,
                     image_height=image_height,
