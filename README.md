@@ -22,6 +22,7 @@ The current pipeline also uses IoU-based object tracking to associate detections
 │       ├── prep_negatives.py  // Prepares negatives training examples
 │       └── prep_positives.py  // Prepares positive training examples
 ├── tests/
+│   ├── test_split.py          // Tests for the train/val video split
 │   └── test_track.py          // Regression tests for the tracker
 ├── data/                      // Dataset and wildlife footage
 └── runs/                      // Training and inference outputs
@@ -282,6 +283,8 @@ python3 -m pytest tests
 ```
 
 `tests/test_track.py` checks the tracker: a still object keeps one track ID, each track matches the detection with the highest IoU, and frames skipped by the inference stride do not count as misses.
+
+`tests/test_split.py` checks the train/val split: no video appears in both splits, every site appears in both splits, and the split is the same on every run. It also checks that video IDs are parsed from filenames with a single or double underscore.
 
 ---
 
