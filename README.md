@@ -235,7 +235,8 @@ Tracking records include:
 The `state` field in each JSON object describes the current stage of a track:
 1) `tentative` - Track is newly created and has not received enough matching detections to be confirmed.
 2) `active` - Once enough hits/matches have been made, the track is upgraded to this state.
-3) `lost` - Once enough frames have passed with no matching detection, the state is updated as `lost`.
+
+`lost` never appears in `tracks.jsonl` since records are only written for frames where a track is matched to a detection. Once a track has gone more than `--max_misses` sampled frames without a match, it is marked as lost internally and dropped.
 
 ---
 
