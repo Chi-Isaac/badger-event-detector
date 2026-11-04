@@ -13,7 +13,7 @@ def parse_args():
     return parser.parse_args()
 
 # Uses track ID as a seed to randomly generate a consistent hue
-# Colour converted from HSV space to RGB
+# Colour converted from HSV space to BGR (OpenCV draws in BGR not RGB)
 def track_colour(track_id):
     rng = random.Random(track_id)
     hue = rng.random()
@@ -23,9 +23,9 @@ def track_colour(track_id):
     r, g, b = colorsys.hsv_to_rgb(hue, saturation, value)
     
     return (
-        round(r * 255),
-        round(g * 255),
         round(b * 255),
+        round(g * 255),
+        round(r * 255),
     )
 
 # Reads JSONL file and groups track records by frame_index
