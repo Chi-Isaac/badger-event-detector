@@ -1,4 +1,6 @@
 import csv
+import random
+import re
 from collections import defaultdict
 from pathlib import Path
 from shutil import copyfile
@@ -42,10 +44,46 @@ def load_csv_annotations(csv_path):
 
     return annotations
 
+# Filenames are <video>_image_<n>.jpg, with some using a double underscore
+def video_id(filename):
+    match = re.match(r"(.+?)_+image_\d+\.jpg$", filename)
+    if match is None:
+        raise ValueError(f"yolo_prep.py: Cannot parse video id from {filename}")
+    return match.group(1)
+
+# Holds out whole videos per site, as adjacent frames are near-identical
+def split_by_video(annotations, val_fraction=0.2, seed=0):
+    frames_by_video = defaultdict(list)
+    for filename in annotations:
+        frames_by_video[video_id(filename)].append(filename)
+
+    videos_by_site = defaultdict(list)
+    for video in sorted(frames_by_video):
+        videos_by_site[video.split("_")[0]].append(video)
+
+    rng = random.Random(seed)
+    val_videos = set()
+    for site, videos in sorted(videos_by_site.items()):
+        rng.shuffle(videos)
+        target = val_fraction * sum(len(frames_by_video[v]) for v in videos)
+        held_out = 0
+        # Last video is never held out so each site stays in train
+        for video in videos[:-1]:
+            n_frames = len(frames_by_video[video])
+            closer = abs(held_out + n_frames - target) < abs(held_out - target)
+            if held_out == 0 or closer:
+                val_videos.add(video)
+                held_out += n_frames
+
+    train = {}
+    val = {}
+    for filename, boxes in annotations.items():
+        split = val if video_id(filename) in val_videos else train
+        split[filename] = boxes
+    return train, val
+
 # Creates annotations and copies images into new folders
-def prepare_split_positives(split_name, csv_path, images_path, output_path):
-    annotations = load_csv_annotations(csv_path)
-    
+def prepare_split_positives(split_name, annotations, images_path, output_path):
     output_imgs_dir = output_path / split_name / "images"
     output_imgs_dir.mkdir(parents=True, exist_ok=True)
     
