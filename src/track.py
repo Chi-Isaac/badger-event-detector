@@ -1,5 +1,6 @@
 import json
 import argparse
+from collections import defaultdict
 from pathlib import Path
 from dataclasses import dataclass, asdict
 
@@ -25,18 +26,24 @@ class TrackRecord:
     box_xywh: list[float]
     box_xyxy: list[float]
 
-# Takes jsonl with all detections and returns list of detections by frame
+# Takes jsonl with all detections and returns detections keyed by frame index
 def load_detections(path):
-    detections_by_frame = []
-    
+    detections_by_frame = defaultdict(list)
+
     with open(path, "r", encoding="utf-8") as f:
         for line in f:
             record = json.loads(line)
-            if record["frame_index"] >= len(detections_by_frame):
-                detections_by_frame.extend([[] for _ in range(record["frame_index"] - len(detections_by_frame) + 1)])
             detections_by_frame[record["frame_index"]].append(record)
-    
+
     return detections_by_frame
+
+# Reads the stride used by inference from run_info.json beside the detections file
+def load_stride(detections_path):
+    run_info_path = detections_path.parent / "run_info.json"
+    if not run_info_path.exists():
+        return 1
+    run_info = json.loads(run_info_path.read_text())
+    return run_info["inference_parameters"]["stride"]
 
 def iou(box_a, box_b):
     x1_a, y1_a, x2_a, y2_a = box_a
@@ -177,15 +184,20 @@ def parse_args():
     parser.add_argument("--iou", type=float, default=0.3, help="IoU threshold for matching detections to existing tracks (default is 0.3)")
     parser.add_argument("--min_hits", type=int, default=3, help="Minimum hits required to consider a track as active (default is 3)")
     parser.add_argument("--max_misses", type=int, default=5, help="Maximum misses allowed before considering a track as lost (default is 5)")
+    parser.add_argument("--stride", type=int, default=None, help="Stride used during inference (default is the value in run_info.json, or 1 if there is no run_info.json)")
     return parser.parse_args()
 
-def run_tracking(detections_path, output_path, iou_threshold=0.3, min_hits=3, max_misses=5):
+def run_tracking(detections_path, output_path, iou_threshold=0.3, min_hits=3, max_misses=5, stride=None):
     detections_by_frame = load_detections(detections_path)
+    if stride is None:
+        stride = load_stride(detections_path)
     curr_tracks = []
     next_track_id = 0
     track_records = []
-    
-    for frame_index, frame_detections in enumerate(detections_by_frame):
+    last_frame = max(detections_by_frame, default=-1)
+
+    for frame_index in range(stride - 1, last_frame + 1, stride):
+        frame_detections = detections_by_frame.get(frame_index, [])
         matches, unmatched_detections_ids, unmatched_tracks_ids = detections_to_tracks(frame_detections, curr_tracks, iou_threshold)
         curr_tracks, next_track_id, new_records = update_tracks(frame_detections, curr_tracks, matches, unmatched_detections_ids, unmatched_tracks_ids, min_hits, max_misses, next_track_id)
         track_records.extend(new_records)
@@ -194,7 +206,7 @@ def run_tracking(detections_path, output_path, iou_threshold=0.3, min_hits=3, ma
     
 def main():
     args = parse_args()
-    run_tracking(args.detections, args.output, args.iou, args.min_hits, args.max_misses)
+    run_tracking(args.detections, args.output, args.iou, args.min_hits, args.max_misses, args.stride)
     
 if __name__ == "__main__":
     main()

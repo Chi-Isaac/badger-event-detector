@@ -163,7 +163,8 @@ python3 src/track.py \
     --output <PATH_TO_TRACKS> \
     [--iou <IOU_THRESHOLD>] \
     [--min_hits <MIN_HITS>] \
-    [--max_misses <MAX_MISSES>]
+    [--max_misses <MAX_MISSES>] \
+    [--stride <STRIDE>]
 ```
 
 | Argument | Description | Required | Default Value |
@@ -172,7 +173,8 @@ python3 src/track.py \
 | `--output` | Path where tracking results will be written. | Yes | N/A |
 | `--iou` | IoU threshold used to match detections to existing tracks (decimal from 0.0 to 1.0). | No | 0.3 |
 | `--min_hits` | Minimum number of hits/matches before a tentative track becomes active. | No | 3 |
-| `--max_misses` | Number of consecutive unmatched frames before an active track becomes lost. | No | 5 |
+| `--max_misses` | Number of consecutive unmatched sampled frames before an active track becomes lost. | No | 5 |
+| `--stride` | Stride used during inference. | No | Value in `run_info.json`, otherwise 1 |
 
 This step reads `detections.jsonl` and associates detections across frames using IoU-based tracking. Resulting object tracks are written to `tracks.jsonl`.
 
