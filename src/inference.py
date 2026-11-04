@@ -29,7 +29,7 @@ def parse_args():
     parser.add_argument("--conf", type=float, default=0.3, help="Confidence threshold for detections (default is 0.3)")
     parser.add_argument("--iou", type=float, default=0.7, help="Intersection over Union threshold (IoU = Area of Overlap / Area of Union) (default is 0.7)")
     parser.add_argument("--imgsz", type=int, default=640, help="Inference image size (pixels) (default is 640)")
-    parser.add_argument("--device", type=str, default="0", help="Device to run inference on ('cpu' or '0' for GPU) (default is '0')")
+    parser.add_argument("--device", type=str, default=None, help="Device to run inference on ('cpu' or '0' for GPU) (default is to pick automatically)")
     parser.add_argument("--stride", type=int, default=1, help="Stride for frame sampling (default is 1)")
     parser.add_argument("--save", action="store_true", help="Save individual frames with bounding boxes drawn")
     
