@@ -1,4 +1,3 @@
 opencv-python
 PyYAML
 ultralytics
-opencv-python
