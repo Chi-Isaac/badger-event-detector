@@ -3,13 +3,14 @@ from pathlib import Path
 from shutil import copyfile
 
 # Splits images into ratios specified for training, validation, and testing
-def split_image_paths(images_path, train_ratio, val_ratio, test_ratio):
-    image_paths = [
+def split_image_paths(images_path, train_ratio, val_ratio, test_ratio, seed=0):
+    image_paths = sorted(
         path for path in images_path.iterdir()
         if path.is_file() and path.suffix.lower() == ".jpg"
-    ]
-    
-    random.shuffle(image_paths)
+    )
+
+    # Sort then shuffle with a fixed seed so the split is reproducible
+    random.Random(seed).shuffle(image_paths)
     
     num_imgs = len(image_paths)
     train_end = int(num_imgs * train_ratio)
