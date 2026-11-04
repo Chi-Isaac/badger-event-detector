@@ -15,6 +15,7 @@ The current pipeline also uses IoU-based object tracking to associate detections
 │   ├── inference.py           // Runs YOLO inference over input footage
 │   ├── track.py               // Associates detections across frames
 │   ├── train_model.py         // Trains the YOLO detection model
+│   ├── visualise_tracks.py    // Draws tracks onto the source video
 │   └── yolo_prep/
 │       ├── __init__.py        // YOLO dataset-preparation package
 │       ├── build_dataset.py   // Builds prepared YOLO dataset
