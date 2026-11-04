@@ -20,6 +20,8 @@ The current pipeline also uses IoU-based object tracking to associate detections
 │       ├── build_dataset.py   // Builds prepared YOLO dataset
 │       ├── prep_negatives.py  // Prepares negatives training examples
 │       └── prep_positives.py  // Prepares positive training examples
+├── tests/
+│   └── test_track.py          // Regression tests for the tracker
 ├── data/                      // Dataset and wildlife footage
 └── runs/                      // Training and inference outputs
 ```
@@ -264,6 +266,21 @@ The output video will:
 - Have the same colour for each track.
 - Displays a label for each track (track_id, state, confidence).
 - Displays the frame index.
+
+---
+
+## Testing
+The tests use pytest, which is not included in `requirements.txt`. Install it with:
+```bash
+python3 -m pip install pytest
+```
+
+From the repository root, run the tests with:
+```bash
+python3 -m pytest tests
+```
+
+`tests/test_track.py` checks the tracker: a still object keeps one track ID, each track matches the detection with the highest IoU, and frames skipped by the inference stride do not count as misses.
 
 ---
 
