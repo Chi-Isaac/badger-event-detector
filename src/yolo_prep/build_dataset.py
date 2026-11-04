@@ -34,7 +34,7 @@ def write_yaml(output_path):
         }
     }
     
-    yaml_path = OUTPUT_PATH / "dataset.yaml"
+    yaml_path = output_path / "dataset.yaml"
     with open(yaml_path, "w", encoding="utf-8") as f:
         yaml.safe_dump(yaml_data, f, sort_keys=False)
 
@@ -51,7 +51,7 @@ def main():
 
     write_yaml(OUTPUT_PATH)
 
-    print("build_dataset.py: Images prepared for YOLOv8")
+    print("build_dataset.py: Images prepared for YOLO")
     
 if __name__ == "__main__":
     main()
