@@ -2,7 +2,11 @@ from pathlib import Path
 import shutil
 import yaml
 
-from src.yolo_prep.prep_positives import prepare_split_positives
+from src.yolo_prep.prep_positives import (
+    load_csv_annotations,
+    prepare_split_positives,
+    split_by_video
+)
 from src.yolo_prep.prep_negatives import prepare_split_negatives
 
 YOLO_PREP_PATH = Path(__file__).resolve().parent
@@ -14,7 +18,6 @@ POSITIVES_DATA_PATH = DATA_PATH / "Badger_Dataset_for_ICANN"
 POSITIVES_TRAIN_CSV = POSITIVES_DATA_PATH / "train_labels.csv"
 POSITIVES_VAL_CSV = POSITIVES_DATA_PATH / "val_labels.csv"
 POSITIVES_TRAIN_IMAGES = POSITIVES_DATA_PATH / "train_images"
-POSITIVES_VAL_IMAGES = POSITIVES_TRAIN_IMAGES
 POSITIVES_TEST_IMAGES = POSITIVES_DATA_PATH / "test_images"
 
 POSITIVES_TEST_CSV = POSITIVES_DATA_PATH / "test_labels.csv"
@@ -25,7 +28,7 @@ OUTPUT_PATH = DATA_PATH / "prepared_yolo"
 
 def write_yaml(output_path):
     yaml_data = {
-        "path": ".",
+        "path": str(output_path.resolve()),
         "train": "train/images",
         "val": "val/images",
         "test": "test/images",
@@ -43,9 +46,17 @@ def main():
         shutil.rmtree(OUTPUT_PATH)
     OUTPUT_PATH.mkdir(parents=True, exist_ok=True)
 
-    prepare_split_positives("train", POSITIVES_TRAIN_CSV, POSITIVES_TRAIN_IMAGES, OUTPUT_PATH)
-    prepare_split_positives("val", POSITIVES_VAL_CSV, POSITIVES_VAL_IMAGES, OUTPUT_PATH)
-    prepare_split_positives("test", POSITIVES_TEST_CSV, POSITIVES_TEST_IMAGES, OUTPUT_PATH)
+    # The val CSV shares videos with train, so re-split them by whole video
+    train_val = (
+        load_csv_annotations(POSITIVES_TRAIN_CSV)
+        | load_csv_annotations(POSITIVES_VAL_CSV)
+    )
+    train, val = split_by_video(train_val)
+    test = load_csv_annotations(POSITIVES_TEST_CSV)
+
+    prepare_split_positives("train", train, POSITIVES_TRAIN_IMAGES, OUTPUT_PATH)
+    prepare_split_positives("val", val, POSITIVES_TRAIN_IMAGES, OUTPUT_PATH)
+    prepare_split_positives("test", test, POSITIVES_TEST_IMAGES, OUTPUT_PATH)
 
     prepare_split_negatives("train", NEGATIVES_DATA_PATH, OUTPUT_PATH, 0.8, 0.1, 0.1)
 
