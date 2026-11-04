@@ -60,7 +60,7 @@ The raw data is stored in the data folder:
 ```text
 data/
 ├── Badger_Dataset_for_ICANN/
-└── nighttime-driving/
+└── nighttime_driving_dataset/
 ```
 
 The scripts in `src/yolo_prep/` are used to prepare the data for YOLO training:
@@ -80,7 +80,7 @@ The data folder following the dataset preparation:
 ```text
 data/
 ├── Badger_Dataset_for_ICANN/
-├── nighttime-driving/
+├── nighttime_driving_dataset/
 └── prepared_yolo/
     ├── test/
     │   ├── images/
