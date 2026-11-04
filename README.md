@@ -25,7 +25,7 @@ The current pipeline also uses IoU-based object tracking to associate detections
 │   ├── test_split.py          // Tests for the train/val video split
 │   └── test_track.py          // Regression tests for the tracker
 ├── data/                      // Dataset and wildlife footage
-└── runs/                      // Training and inference outputs
+└── runs/                      // Training and inference outputs===
 ```
 
 ---
@@ -124,6 +124,11 @@ Please ensure the dataset is properly prepared before attempting to train the mo
 To train the YOLO model from the repository root:
 ```bash
 python3 src/train_model.py
+```
+
+Training uses the GPU and stops with an error if none is found. To train on the CPU instead, which is much slower, add the `--cpu` flag:
+```bash
+python3 src/train_model.py --cpu
 ```
 
 Training outputs, including the model weights and metrics, will be saved in the `runs/` folder.
