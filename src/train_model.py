@@ -27,6 +27,18 @@ def main():
         device=0,
         workers=4
     )
+
+    # Test on best weights (chosen by val)
+    test_metrics = model.val(
+        data=str(YAML_PATH),
+        split="test",
+        project=str(RUNS_STORE_PATH),
+        name=f"{RUN_NAME}_test"
+    )
+    print(
+        f"train_model.py: test mAP50={test_metrics.box.map50:.3f}, "
+        f"mAP50-95={test_metrics.box.map:.3f}"
+    )
     
 if __name__ == "__main__":
     main()
