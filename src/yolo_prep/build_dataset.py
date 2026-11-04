@@ -28,7 +28,7 @@ OUTPUT_PATH = DATA_PATH / "prepared_yolo"
 
 def write_yaml(output_path):
     yaml_data = {
-        "path": ".",
+        "path": str(output_path.resolve()),
         "train": "train/images",
         "val": "val/images",
         "test": "test/images",
